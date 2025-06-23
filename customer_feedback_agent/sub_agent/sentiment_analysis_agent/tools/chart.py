@@ -3,10 +3,6 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 from collections import defaultdict
-
-
-
-
 def plot_sentiment_line_chart(sentiments: List[Literal["positive", "neutral", "negative"]], dates: List[str]) -> str:
     """
     sentiments: List of sentiment labels
@@ -17,11 +13,9 @@ def plot_sentiment_line_chart(sentiments: List[Literal["positive", "neutral", "n
         "neutral": defaultdict(int),
         "negative": defaultdict(int)
     }
-
     for sentiment, date in zip(sentiments, dates):
         if sentiment in sentiment_by_date:
             sentiment_by_date[sentiment][date] += 1
-
     # Sort dates
     sorted_dates = sorted(set(dates))
     

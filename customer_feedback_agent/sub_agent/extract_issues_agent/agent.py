@@ -2,43 +2,49 @@ from google.adk.agents import LlmAgent
 from pydantic import BaseModel, Field
 from typing import List
 
-# Define schema for each review input
+
+# Input Schema
 class ReviewItem(BaseModel):
     source: str
     text: str
     score: int
     date: str
 
-# Define schema for each review output
-class SingleReviewIssueOutput(BaseModel):
-    text: str
-    issues: List[str] = Field(description="List of application or product issues mentioned in the review")
-    issue_count: int = Field(description="Number of distinct issues found")
 
-# Full input schema for batch
 class AppIssueBatchInput(BaseModel):
     reviews: List[ReviewItem]
 
-# Full output schema for batch
-class AppIssueBatchOutput(BaseModel):
-    results: List[SingleReviewIssueOutput]
 
-# Define the agent
+# Updated Output Schema
+class ExtractedIssue(BaseModel):
+    issue: str = Field(description="The reported issue in one sentence")
+    tag: str = Field(description="Issue category: bug, crash, ui, performance, feature_request, other")
+    priority: str = Field(description="Priority level: high, medium, low")
+
+
+class AppIssueBatchOutput(BaseModel):
+    results: List[ExtractedIssue]
+
+
+# Agent Definition
 extract_issues_agent = LlmAgent(
     name="extract_issues_agent",
     model="gemini-2.0-flash",
-    description="Extracts app issues from a list of user reviews",
+    description="Extracts user-reported app issues from reviews",
     instruction="""
-You are an AI assistant that identifies problems in software applications or products based on user reviews.
+You are an AI assistant that identifies problems in software applications based on user reviews.
 
 Instructions:
-- For each review, extract all user-reported issues such as bugs, crashes, UI problems, missing features, or poor performance.
-- List each issue as a short bullet point (max 1 sentence).
-- Count and return the number of distinct issues.
-- Include the original 'text' field in your response.
-- Return ONLY valid JSON using the defined output schema.
+- Read each review and extract only specific issues mentioned (e.g., bugs, crashes, UI glitches, performance lags, or missing features).
+- Do not include the original review text in the output.
+- For each issue:
+  - Write a short one-line description.
+  - Assign a tag: "bug", "crash", "ui", "performance", "feature_request", or "other".
+  - Assign a priority: "high", "medium", or "low" based on user urgency or impact.
+
+Return ONLY a flat list of issues in valid JSON format using the schema.
 """,
     input_schema=AppIssueBatchInput,
     output_schema=AppIssueBatchOutput,
-    output_key="issue_analysis"
+    output_key="results"
 )

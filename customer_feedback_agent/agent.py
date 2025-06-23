@@ -42,7 +42,7 @@ root_agent = Agent(
         "like the topic extractor and sentiment analyzer to generate actionable insights. It maintains a central review store (JSON format) "
         "and intelligently routes developer queries to the appropriate analysis agents. Ideal for identifying app issues, understanding "
         "public perception, and improving overall app quality."
-        "Once reviews are fetched, you have two subagents sentiment_analysis_agent and extract_issue_agent you will call both the agent and pass the data to them " 
+        "Once reviews are fetched, you have two subagents sentiment_analysis_agent and extract_issue_agent you will ask user which one to call   " 
         
     ),
     model="gemini-2.0-flash",
@@ -57,7 +57,8 @@ root_agent = Agent(
         "   - For understanding the app’s public image or perception, fetch additional reviews if possible and invoke the `sentiment_analyzer` agent to categorize user sentiment (positive, neutral, negative).\n"
         "\nYour job is NOT to interpret or analyze the reviews directly, but to ensure accurate data flow between the input, review storage, and sub-agent analysis pipelines. "
         "Always ensure the output shown to the developer is based on real user reviews, and delegate intelligent processing to the appropriate agent."
-        "Once reviews are fetched, you have two subagents sentiment_analysis_agent and extract_issue_agent you will call both the agent and pass the data to them "
+        "Once reviews are fetched, you have two subagents sentiment_analysis_agent and extract_issue_agent you will ask user which one to call   "
+    
     ),
     sub_agents=[sentiment_analysis_agent,extract_issues_agent ],
     tools=[fetch_playstore_reviews],
