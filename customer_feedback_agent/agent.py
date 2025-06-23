@@ -3,16 +3,9 @@ import json
 from typing import Dict, List
 from google.adk.agents import Agent
 from google_play_scraper import reviews, Sort
-# agents/root_agent.py
-
-
 from customer_feedback_agent.sub_agent.sentiment_analysis_agent import sentiment_analysis_agent
 from customer_feedback_agent.sub_agent.extract_issues_agent import extract_issues_agent
-# Now you can call it like this:
 
-
-
-import os
 
 def fetch_playstore_reviews(app_url: str, count: int = 50) -> List[Dict]:
     """Fetches reviews from a Play Store app URL.
@@ -51,7 +44,7 @@ root_agent = Agent(
         "like the topic extractor and sentiment analyzer to generate actionable insights. It maintains a central review store (JSON format) "
         "and intelligently routes developer queries to the appropriate analysis agents. Ideal for identifying app issues, understanding "
         "public perception, and improving overall app quality."
-        "Once reviews are fetched, ask the user: - Type 1 to extract issues → delegate to `extract_issues_agent`- Type 2 for sentiment analysis → delegate to `sentiment_analysis_agent`Send the fetched reviews to the appropriate subagent using its input schema" 
+        "Once reviews are fetched, you have two subagents sentiment_analysis_agent and extract_issue_agent you will call both the agent and pass the data to them " 
         
     ),
     model="gemini-2.0-flash",
@@ -66,7 +59,7 @@ root_agent = Agent(
         "   - For understanding the app’s public image or perception, fetch additional reviews if possible and invoke the `sentiment_analyzer` agent to categorize user sentiment (positive, neutral, negative).\n"
         "\nYour job is NOT to interpret or analyze the reviews directly, but to ensure accurate data flow between the input, review storage, and sub-agent analysis pipelines. "
         "Always ensure the output shown to the developer is based on real user reviews, and delegate intelligent processing to the appropriate agent."
-        "Once reviews are fetched, ask the user: - Type 1 to extract issues → delegate to `topic_extr`- Type 2 for sentiment analysis → delegate to `multi_tool_agent`Send the fetched reviews to the appropriate subagent using its input schema"
+        "Once reviews are fetched, you have two subagents sentiment_analysis_agent and extract_issue_agent you will call both the agent and pass the data to them "
     ),
     sub_agents=[sentiment_analysis_agent,extract_issues_agent ],
     tools=[fetch_playstore_reviews],

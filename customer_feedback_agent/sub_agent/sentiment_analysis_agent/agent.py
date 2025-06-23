@@ -2,6 +2,10 @@ from typing import List
 from pydantic import BaseModel
 from pydantic import Field
 from google.adk.agents import Agent
+from customer_feedback_agent.sub_agent.sentiment_analysis_agent.tools.chart import plot_sentiment_bar_chart
+from customer_feedback_agent.sub_agent.sentiment_analysis_agent.tools.chart import plot_sentiment_pie_chart,plot_sentiment_line_chart
+
+
 class ReviewInput(BaseModel):
     source: str
     text: str
@@ -10,6 +14,10 @@ class ReviewInput(BaseModel):
 
 class ReviewBatchInput(BaseModel):
     reviews: List[ReviewInput]
+
+
+
+
 
 
 class AnalyzedReview(BaseModel):
@@ -42,8 +50,10 @@ Given a list of user reviews (with rating, source, and date), analyze each one a
 
 Each review in the response should retain the original fields: source, text, score, and date.
 Respond ONLY with valid JSON using the output schema.
+when the response is ready you have tool 'plot_sentiment_bar_chart' 'plot_sentiment_pie_chart' 'plot_sentiment_line_chart'which will create a bar chart , pie chart , line chart you ask user which one to draw so you will When plotting charts using tools, you will receive a URL path (e.g., /static/chart.png). You must print it in the final response so the user can click or preview it.
 """,
     input_schema=ReviewBatchInput,
-    output_schema=ReviewBatchOutput,
-    output_key="review_result"
+    
+    output_key="review_result",
+    tools=[plot_sentiment_bar_chart,plot_sentiment_pie_chart,plot_sentiment_line_chart]
 )
