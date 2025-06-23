@@ -1,0 +1,4 @@
+google-adk
+google-play-scraper
+matplotlib
+pydantic

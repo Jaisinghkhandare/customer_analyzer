@@ -1,11 +1,9 @@
 import re
-import json
 from typing import Dict, List
 from google.adk.agents import Agent
 from google_play_scraper import reviews, Sort
 from customer_feedback_agent.sub_agent.sentiment_analysis_agent import sentiment_analysis_agent
 from customer_feedback_agent.sub_agent.extract_issues_agent import extract_issues_agent
-
 
 def fetch_playstore_reviews(app_url: str, count: int = 50) -> List[Dict]:
     """Fetches reviews from a Play Store app URL.
